@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hospital',
     'appointment',
+    
 ]
 
 MIDDLEWARE = [
@@ -79,8 +80,15 @@ WSGI_APPLICATION = 'heartcare.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hospitaldb',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
@@ -129,12 +137,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your email'
-EMAIL_HOST_PASSWORD = 'your password'
+EMAIL_HOST_USER = 'rushipatil8530@gmail.com'
+EMAIL_HOST_PASSWORD = 'zvia oczh ysgl jmhq'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL =False
+
+LOGIN_REDIRECT_URL = 'login'

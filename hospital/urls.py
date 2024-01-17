@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from hospital.views import CustomLoginView
+
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='index'),
