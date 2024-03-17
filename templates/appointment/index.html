@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block maincontent %}
+  <!--inner banner-->
+  {% if messages %}
+    <div class="alert alert-success text-center" id="alert-msg">
+      {% for message in messages %}
+        <h3>{{ message }}</h3>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="inner-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-7">
+          <h1>Get Appointment</h1>
+        </div>
+        <div class="col-md-5">
+          <ol class="breadcrumb">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li class="active">Appointment</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--inner banner End-->
+
+  <!--Main Content Start-->
+  <div class="main-content padding-0">
+    <section class="appointment-form">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6"><img src="{% static 'heartcare/images/form-pic.jpg' %}" alt=""></div>
+          <div class="col-md-6">
+            <form action="{% url 'appointment' %}" method="post">
+              {% csrf_token %}
+              <div class="app-form">
+                <div class="col-md-6 col-sm-6">
+                  <input class="form-control" placeholder="Full Name *" type="text" name="name">
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <input class="form-control" placeholder="Your Phone *" type="text" name="phone">
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <input class="form-control" placeholder="Your Email *" type="text" name="email">
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <select name="doctor">
+                    <option disabled>--Doctor--</option>
+                    {% for doctor in doctors %}
+                      <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <div class="input-group date">
+                    <input placeholder="Date *" name="date" class="form-control" type="date">
+                    <span class="input-group-addon"> <i class="fa fa-calendar" aria-hidden="true"></i> </span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <select name="time">
+                    <option disabled>--Time--</option>
+                    <option value="morning">Morning</option>
+                    <option value="morning">Evening</option>
+                  </select>
+                </div>
+                <div class="col-md-6 col-sm-6 d-flex justify-content-end">
+                  <button id="rzp-button1" style="background-color: #C41E08; border: none; color: white; padding: 2px 229px; align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Payment</button>
+              </div>
+                <div class="col-md-12 text-center">
+                  <textarea placeholder="Please Provide details About Payment done or pending and Your Query" name="note"></textarea>
+                  <input value="Book Appointment" type="submit">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var options = {
+      "key": "rzp_test_gpoTDCndtoqFA8", // Enter the Key ID generated from the Dashboard
+      "amount": "5000", // Amount is in currency subunits. Default currency is INR.
+      "currency": "INR",
+      "name": "HEART CARE HOSPITAL",
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": "{{ payment_result.order_id }}", // Use the order_id from the server-side response
+      "handler": function (response) {
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature);
+      },
+      "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+      },
+      "notes": {
+        "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+        "color": "#3399cc"
+      }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response) {
+      alert(response.error.code);
+      alert(response.error.description);
+      alert(response.error.source);
+      alert(response.error.step);
+      alert(response.error.reason);
+      alert(response.error.metadata.order_id);
+      alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function (e) {
+      rzp1.open();
+      e.preventDefault();
+    }
+  </script>
+  <!--Main Content End-->
+{% endblock maincontent %}
